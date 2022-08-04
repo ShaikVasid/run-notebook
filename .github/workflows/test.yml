@@ -36,9 +36,7 @@ jobs:
               }
             ]          
       - run: |
-          npm install
-      - run: |
-          npm run all
+          apt-get install net-tools -y
         if: github.ref == '/refs/heads/main'			
       - name: Trigger notebook in prod
         uses: ShaikVasid/run-notebook@v0
@@ -61,6 +59,4 @@ jobs:
               }
             ]          
       - run: |
-          npm install
-      - run: |
-          npm run all
+          apt-get install net-tools -y
