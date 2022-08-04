@@ -20,6 +20,21 @@ jobs:
         with:
           databricks-host: https://adb-1171939023690387.7.azuredatabricks.net/
           databricks-token: ${{ secrets.DATABRICKS_DEV_TOKEN }}
+          new-cluster-json: >
+            {
+              "num_workers": 1,
+              "spark_version": "10.4.x-scala2.12",
+              "node_type_id": "Standard_D3_v2"
+            }
+          # Grant users in the "devops" group view permission on the
+          # notebook results
+          access-control-list-json: >
+            [
+              {
+                "group_name": "devops",
+                "permission_level": "CAN_VIEW"
+              }
+            ]          
       - run: |
           npm install
       - run: |
@@ -30,6 +45,21 @@ jobs:
         with:
           databricks-host: https://adb-2363935646913262.2.azuredatabricks.net/
           databricks-token: ${{ secrets.DATABRICKS_PROD_TOKEN }}
+          new-cluster-json: >
+            {
+              "num_workers": 1,
+              "spark_version": "10.4.x-scala2.12",
+              "node_type_id": "Standard_D3_v2"
+            }
+          # Grant users in the "devops" group view permission on the
+          # notebook results
+          access-control-list-json: >
+            [
+              {
+                "group_name": "devops",
+                "permission_level": "CAN_VIEW"
+              }
+            ]          
       - run: |
           npm install
       - run: |
