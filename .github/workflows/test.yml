@@ -20,6 +20,7 @@ jobs:
         with:
           databricks-host: https://adb-1171939023690387.7.azuredatabricks.net/
           databricks-token: ${{ secrets.DATABRICKS_DEV_TOKEN }}
+          local-notebook-path: notebooks/MainNotebook.py
           new-cluster-json: >
             {
               "num_workers": 1,
@@ -43,6 +44,7 @@ jobs:
         with:
           databricks-host: https://adb-2363935646913262.2.azuredatabricks.net/
           databricks-token: ${{ secrets.DATABRICKS_PROD_TOKEN }}
+          local-notebook-path: notebooks/MainNotebook.py
           new-cluster-json: >
             {
               "num_workers": 1,
