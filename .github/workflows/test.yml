@@ -1,17 +1,63 @@
-name: 'build-test'
-on: # rebuild any PRs and main branch changes
+name: example-workflow
+on:
   pull_request:
+    # Sequence of patterns matched against refs/heads
   push:
     branches:
       - main
-      - 'releases/*'
+      - dev
 
 jobs:
-  build-and-test: # make sure build/ci work properly
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          npm install
-      - run: |
-          npm run all
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        if: github.ref == '/refs/heads/dev' 
+      - name: Trigger notebook in Dev
+        uses: ShaikVasid/run-notebook@v0
+        with:
+          databricks-host: https://adb-1171939023690387.7.azuredatabricks.net/
+          databricks-token: ${{ secrets.DATABRICKS_DEV_TOKEN }}
+          local-notebook-path: notebooks/MainNotebook.py
+          new-cluster-json: >
+            {
+              "num_workers": 1,
+              "spark_version": "10.4.x-scala2.12",
+              "node_type_id": "Standard_D3_v2"
+            }
+          # Grant users in the "devops" group view permission on the
+          # notebook results
+          access-control-list-json: >
+            [
+              {
+                "group_name": "devops",
+                "permission_level": "CAN_VIEW"
+              }
+            ]
+        if: github.ref == '/refs/heads/main'			
+      - name: Trigger notebook in prod
+        uses: ShaikVasid/run-notebook@v0
+        with:
+          databricks-host: https://adb-2363935646913262.2.azuredatabricks.net/
+          databricks-token: ${{ secrets.DATABRICKS_PROD_TOKEN }}
+          local-notebook-path: notebooks/MainNotebook.py
+          # The cluster JSON below is for AWS workspaces. On Azure and GCP, set
+          # node_type_id to an appropriate node type, e.g. "Standard_D3_v2" for
+          # Azure or "n1-highmem-4" for GCP
+          new-cluster-json: >
+            {
+              "num_workers": 1,
+              "spark_version": "10.4.x-scala2.12",
+              "node_type_id": "Standard_D3_v2"
+            }
+          # Grant users in the "devops" group view permission on the
+          # notebook results
+          access-control-list-json: >
+            [
+              {
+                "group_name": "devops",
+                "permission_level": "CAN_VIEW"
+              }
+            ]
