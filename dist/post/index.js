@@ -1,3 +1,4 @@
+#Adding this line checking trihher action
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
